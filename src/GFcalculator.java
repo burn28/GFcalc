@@ -32,10 +32,10 @@ public class GFcalculator {
             sb.append((a.charAt(i) ^ b.charAt(i)));
         }
         String result = sb.toString();
-        System.out.println(result);
+//        System.out.println(result);
 //        System.out.println(binToPoly(result.split("(?!^)")));
         ArrayList test=binToPoly(result.split("(?!^)"));
-        System.out.println(test);
+        System.out.println("="+test);
     }
 
     public static ArrayList<Integer> binToPoly(String[] array){
@@ -77,6 +77,7 @@ public class GFcalculator {
 
         if(result.get(0)<n){
             System.out.println(result);
+//            polyToDec(result);
         }else{
             System.out.println(result);
 //            System.out.println(latest);
@@ -187,12 +188,85 @@ public class GFcalculator {
         System.out.println(reminder);
     }
 
+    public static Integer binToDec(String[] bin){
+//        ArrayList<Integer> bin = new ArrayList<>();
+//        int greatest = poly.get(0);
+//        bin.add(1);
+//        //poly to bin
+//        for (int i = 1; i < poly.get(0)+1 ; i++) {
+//            greatest--;
+//            if(poly.get(i) == greatest){
+//                bin.add(1);
+//            }else {
+//                bin.add(0);
+//            }
+//
+//        }
+//        System.out.println(bin);
+
+        //bin to dec
+        StringBuilder sb = new StringBuilder();
+        for (String binary : bin) {
+            sb.append(binary);
+        }
+        int decimal = Integer.parseInt(sb.toString(),2);
+        System.out.println(decimal);
+        return decimal;
+    }
+
+    public static void inverse(){
+        ArrayList<Integer> dividend = new ArrayList<>();
+        ArrayList<Integer> divisor = new ArrayList<>();
+        ArrayList<Integer> quotient = new ArrayList<>();
+        ArrayList<Integer> remainder = new ArrayList<>();
+
+        ArrayList<Integer> x = new ArrayList<>();
+        ArrayList<Integer> y = new ArrayList<>();
+        x.add(1);
+        x.add(0);
+        y.add(0);
+        y.add(1);
+
+        dividend.add(binToDec(arrayA));
+        divisor.add(binToDec(arrayB));
+        int i =0;
+        do {
+
+            quotient.add(dividend.get(i)/divisor.get(i));
+            remainder.add(dividend.get(i)%divisor.get(i));
+
+            dividend.add(divisor.get(i));
+            divisor.add(remainder.get(i));
+            i++;
+
+        }while (remainder.get(remainder.size()-1) > 1);
+
+
+
+        for (int j = 0; j < quotient.size(); j++) {
+            x.add(x.get(j)-x.get(j+1)*quotient.get(j));
+            y.add(y.get(j)-y.get(j+1)*quotient.get(j));
+        }
+
+
+        System.out.println(dividend);
+        System.out.println(divisor);
+        System.out.println(quotient);
+        System.out.println(remainder);
+        System.out.println(x);
+        System.out.println(y);
+        System.out.println("x = "+x.get(x.size()-1));
+        System.out.println("y = "+y.get(y.size()-1));
+
+    }
+
 
     public static void main(String[] args) {
         System.out.print("hai ");
         menu();
 //        addSub();
-        multiply();
+//        multiply();
+        inverse();
 
     }
 
