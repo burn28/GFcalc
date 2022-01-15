@@ -8,36 +8,105 @@ public class GFcalculator {
 
     public static void menu(){
         Scanner scan = new Scanner(System.in);
-        System.out.println("GALOIS FIELD(2^N) CALCULATOR");
-        System.out.println("ENTER THE DESIRE N");
-        n = scan.nextInt();
-        System.out.println("ENTER A VALUE IN BINARY UNTIL X^0");
-        a = scan.next();
-        arrayA = a.split("(?!^)");
-        System.out.println("ENTER OPERATION(+, -, x");
-        operation = scan.next();
-        System.out.println("ENTER B VALUE IN BINARY UNTIL X^0");
-        b = scan.next();
-        arrayB = b.split("(?!^)");
-        System.out.println(n);
-        System.out.println(Arrays.toString(arrayA));
-        System.out.println(operation);
-        System.out.println(Arrays.toString(arrayB));
+        int choice;
+        while (true){
+            System.out.println("GALOIS FIELD(2^N) CALCULATOR");
+            System.out.println("1. Addition ");
+            System.out.println("2. Subtraction ");
+            System.out.println("3. Multiplication ");
+            System.out.println("4. Multiplicative Inverse ");
+            System.out.println("5. Exit ");
+            System.out.print("Enter your choice:");
+            choice = scan.nextInt();
+
+            if(choice != 5){
+                a = "";
+                b = "";
+                arrayA = new String[0];
+                arrayB = new String[0];
+                System.out.println("ENTER THE DESIRE N");
+                n = scan.nextInt();
+                System.out.println("ENTER A VALUE IN BINARY UNTIL X^0");
+                a = scan.next();
+//            System.out.println("ENTER OPERATION(+, -, x, )");
+//            operation = scan.next();
+                System.out.println("ENTER B VALUE IN BINARY UNTIL X^0");
+                b = scan.next();
+                while(a.length()<n){
+                    a = "0" + a;
+                }
+                while(b.length()<n){
+                    b = "0" + b;
+                }
+                arrayA = a.split("(?!^)");
+                arrayB = b.split("(?!^)");
+            }
+
+
+            switch (choice){
+                case 1:
+                    addSub();
+                    break;
+                case 2:
+                    addSub();
+                    break;
+                case 3:
+                    multiply();
+                    break;
+                case 4:
+                    inverse();
+                    break;
+                case 5:
+                    System.out.println("Terminating Program.......");
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Not a valid option!");
+                    break;
+            }
+
+            //debugging
+//            System.out.println(n);
+//            System.out.println(Arrays.toString(arrayA));
+//            System.out.println(operation);
+//            System.out.println(Arrays.toString(arrayB));
+        }
+
+
+
     }
 
     public static void addSub(){
+        if(a.length()>n || b.length()>n){
+            System.out.println("a or b value are exceeding the n value!");
+            menu();
+        }
         StringBuilder sb = new StringBuilder();
-
+        //use a and b to get char in string
         for(int i = 0; i < a.length(); i++) {
             sb.append((a.charAt(i) ^ b.charAt(i)));
         }
         String result = sb.toString();
 //        System.out.println(result);
 //        System.out.println(binToPoly(result.split("(?!^)")));
-        ArrayList test=binToPoly(result.split("(?!^)"));
-        System.out.println("="+test);
+        ArrayList answer=binToPoly(result.split("(?!^)"));
+        System.out.println("= "+answer);
+        System.out.println("= "+finalAnswer(answer));
     }
 
+    public static String finalAnswer(ArrayList answer){
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < answer.size(); i++) {
+            sb.append("x^").append(answer.get(i));
+            if(i< answer.size()-1){
+                sb.append(" + ");
+            }
+        }
+        return sb.toString();
+    }
+
+
+    //convert binary to polynomial form for multiply
     public static ArrayList<Integer> binToPoly(String[] array){
         ArrayList<Integer> poly = new ArrayList<>();
 //        int[] poly = new int[array.length];
@@ -76,10 +145,11 @@ public class GFcalculator {
         result.removeAll(latest);
 
         if(result.get(0)<n){
-            System.out.println(result);
+            System.out.println("= "+result);
 //            polyToDec(result);
         }else{
-            System.out.println(result);
+            System.out.println("Dividend"+result);
+            System.out.print("Irreducible");
 //            System.out.println(latest);
             irreducible(result);
         }
@@ -159,16 +229,19 @@ public class GFcalculator {
         do{
 
             quotient = dividend.get(0)-divisor.get(0);
-            System.out.println("q"+quotient);
+            //Debug quotient
+//            System.out.println("q"+quotient);
             for(int i=0; i<divisor.size(); i++){
                 temp.add(divisor.get(i)+quotient);
             }
-            System.out.println("T "+temp);
+            //Debug temp array
+//            System.out.println("T "+temp);
             dividend.addAll(temp);
             temp.clear();
             reminder.clear();
             reminder.addAll(dividend);
 
+            //XOR dividend and temp
             ArrayList<Integer> check = new ArrayList<>();
             for(int i=0; i < dividend.size(); i++){
                 for (int j = i+1; j < dividend.size(); j++) {
@@ -177,17 +250,21 @@ public class GFcalculator {
                     }
                 }
             }
+            //remove same element
             reminder.removeAll(check);
             reminder.sort(Collections.reverseOrder());
             if(reminder.get(0)>=n){
                 dividend.clear();
                 dividend.addAll(reminder);
-                System.out.println("Dividend"+dividend);
+                //Dividend
+//                System.out.println("Dividend"+dividend);
             }
         }while (reminder.get(0) >= n);
-        System.out.println(reminder);
+        System.out.println("= "+reminder);
+        System.out.println("= "+finalAnswer(reminder));
     }
 
+    //convert binary to decimal form for inverse
     public static Integer binToDec(String[] bin){
 //        ArrayList<Integer> bin = new ArrayList<>();
 //        int greatest = poly.get(0);
@@ -210,10 +287,11 @@ public class GFcalculator {
             sb.append(binary);
         }
         int decimal = Integer.parseInt(sb.toString(),2);
-        System.out.println(decimal);
+//        System.out.println(decimal);
         return decimal;
     }
 
+    //find inverse using extended euclidean algorithm
     public static void inverse(){
         ArrayList<Integer> dividend = new ArrayList<>();
         ArrayList<Integer> divisor = new ArrayList<>();
@@ -248,25 +326,20 @@ public class GFcalculator {
             y.add(y.get(j)-y.get(j+1)*quotient.get(j));
         }
 
-
-        System.out.println(dividend);
-        System.out.println(divisor);
-        System.out.println(quotient);
-        System.out.println(remainder);
-        System.out.println(x);
-        System.out.println(y);
+            //Debugging
+//        System.out.println("Dividend"+dividend);
+//        System.out.println("Divisor"+divisor);
+//        System.out.println("Quotient"+quotient);
+//        System.out.println("Remainder"+remainder);
+//        System.out.println("x"+x);
+//        System.out.println("y"+y);
         System.out.println("x = "+x.get(x.size()-1));
         System.out.println("y = "+y.get(y.size()-1));
 
     }
 
-
     public static void main(String[] args) {
-        System.out.print("hai ");
         menu();
-//        addSub();
-//        multiply();
-        inverse();
 
     }
 
