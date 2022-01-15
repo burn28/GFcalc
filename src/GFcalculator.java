@@ -10,6 +10,7 @@ public class GFcalculator {
         Scanner scan = new Scanner(System.in);
         int choice;
         while (true){
+            System.out.println("\u001b[0m");
             System.out.println("GALOIS FIELD(2^N) CALCULATOR");
             System.out.println("1. Addition ");
             System.out.println("2. Subtraction ");
@@ -96,6 +97,7 @@ public class GFcalculator {
 
     public static String finalAnswer(ArrayList answer){
         StringBuilder sb = new StringBuilder();
+        sb.append("\u001b[36m");
         for (int i = 0; i < answer.size(); i++) {
             sb.append("x^").append(answer.get(i));
             if(i< answer.size()-1){
@@ -333,8 +335,8 @@ public class GFcalculator {
 //        System.out.println("Remainder"+remainder);
 //        System.out.println("x"+x);
 //        System.out.println("y"+y);
-        System.out.println("x = "+x.get(x.size()-1));
-        System.out.println("y = "+y.get(y.size()-1));
+        System.out.println("\u001b[36mx = "+x.get(x.size()-1));
+        System.out.println("\u001b[36my = "+y.get(y.size()-1));
 
     }
 
